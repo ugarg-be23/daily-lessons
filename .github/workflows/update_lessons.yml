@@ -1,0 +1,28 @@
+name: Update Lessons Daily
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
+jobs:
+  update-lessons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update Lessons
+        run: |
+          echo "# Daily Lessons" > docs/index.md
+          echo "_Updated automatically every day._" >> docs/index.md
+          echo "" >> docs/index.md
+          echo "## $(date '+%Y-%m-%d')" >> docs/index.md
+          echo "- Today's lesson: Learning Automation with GitHub Actions." >> docs/index.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "LessonBot"
+          git config --global user.email "noreply@github.com"
+          git add docs/index.md
+          git commit -m "Updated lessons for $(date '+%Y-%m-%d')"
+          git push
